@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/qulification-round/esab-atad/esab-atad.iml" filepath="$PROJECT_DIR$/qulification-round/esab-atad/esab-atad.iml" />
+      <module fileurl="file://$PROJECT_DIR$/google-code-jam-2020.iml" filepath="$PROJECT_DIR$/google-code-jam-2020.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qulification-round/indicium/indicium.iml" filepath="$PROJECT_DIR$/qulification-round/indicium/indicium.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qulification-round/nesting-depth/nesting-depth.iml" filepath="$PROJECT_DIR$/qulification-round/nesting-depth/nesting-depth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qulification-round/parenting-partnering-returns/parenting-partnering-returns.iml" filepath="$PROJECT_DIR$/qulification-round/parenting-partnering-returns/parenting-partnering-returns.iml" />
+      <module fileurl="file://$PROJECT_DIR$/qulification-round/vestigium/vestigium.iml" filepath="$PROJECT_DIR$/qulification-round/vestigium/vestigium.iml" />
+    </modules>
+  </component>
+</project>
