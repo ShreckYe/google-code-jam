@@ -14,7 +14,7 @@ object RecursiveSolution {
         val cachedPath = cachedRPaths(i)(j)
         if (cachedPath != null) cachedPath
         else {
-          val searchedPath = if (i == 0 && j == 0) List.empty
+          val searchedPath = if (i == 0 && j == 0) Nil
           else {
             val index = i + j
             val pPosition = pPositions(index)

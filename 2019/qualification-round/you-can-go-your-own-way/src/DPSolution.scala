@@ -16,7 +16,7 @@ object DPSolution {
       for (i <- 0 until N) {
         curRowRPaths = Array.fill[List[Char]](N)(null)
         for (j <- 0 until N) {
-          curRowRPaths(j) = if (i == 0 && j == 0) List.empty
+          curRowRPaths(j) = if (i == 0 && j == 0) Nil
           else {
             val index = i + j
             val pPosition = pPositions(index)
