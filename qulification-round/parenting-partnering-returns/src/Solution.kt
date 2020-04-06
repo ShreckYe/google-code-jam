@@ -14,21 +14,14 @@ fun main() {
 
             for ((i, task) in sortedTasks) {
                 val (s, e) = task
-                fun scheduledToC() {
+
+                if (s >= lastCE) {
                     assign[i] = 'C'
                     lastCE = e
-                }
-
-                fun scheduledToJ() {
+                } else if (s >= lastJE) {
                     assign[i] = 'J'
                     lastJE = e
-                }
-
-                if (!if (lastCE >= lastJE)
-                        preferToScheduleToPersonWithLaterLastE(s, lastCE, ::scheduledToC, lastJE, ::scheduledToJ)
-                    else
-                        preferToScheduleToPersonWithLaterLastE(s, lastJE, ::scheduledToJ, lastCE, ::scheduledToC)
-                )
+                } else
                     return "IMPOSSIBLE"
             }
             return String(assign)
@@ -39,17 +32,3 @@ fun main() {
 }
 
 data class Task(val s: Int, val e: Int)
-
-inline fun preferToScheduleToPersonWithLaterLastE(
-    s: Int,
-    laterLastE: Int, scheduledToLaterLastE: () -> Unit,
-    earlierLastE: Int, scheduledToEarlierLastE: () -> Unit
-): Boolean =
-    if (s >= laterLastE) {
-        scheduledToLaterLastE()
-        true
-    } else if (s >= earlierLastE) {
-        scheduledToEarlierLastE()
-        true
-    } else
-        false
