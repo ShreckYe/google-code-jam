@@ -9,14 +9,14 @@ fun main() {
     }
 }
 
-class Matrix private constructor(val n: Int, val content: IntArray) {
+class SquareMatrix private constructor(val n: Int, val content: IntArray) {
     companion object {
-        fun zeroMatrix(n: Int) = Matrix(n, IntArray(n * n))
+        fun zeroMatrix(n: Int) = SquareMatrix(n, IntArray(n * n))
     }
 
     operator fun get(i: Int, j: Int): Int = content[n * i + j]
     fun copyWithChange(i: Int, j: Int, value: Int) =
-        Matrix(n, content.copyOf().apply { this[n * i + j] = value })
+        SquareMatrix(n, content.copyOf().apply { this[n * i + j] = value })
 
     override fun toString(): String {
         val indices = 0 until n
@@ -29,22 +29,22 @@ class Matrix private constructor(val n: Int, val content: IntArray) {
 
 data class MatrixIndex(val i: Int, val j: Int)
 
-fun latinMatrices(n: Int): Sequence<Matrix> =
-    latinMatricesFrom(n, Matrix.zeroMatrix(n), 0, 0, (1..n).toList())
+fun latinMatrices(n: Int): Sequence<SquareMatrix> =
+    latinMatricesFrom(n, SquareMatrix.zeroMatrix(n), 0, 0, (1..n).toList())
 
 fun latinMatricesFrom(
-    n: Int, matrix: Matrix, fromI: Int, fromJ: Int, remainingRowChoices: List<Int>
-): Sequence<Matrix> =
-    if (fromI == n) sequenceOf(matrix)
-    else if (fromJ == n) latinMatricesFrom(n, matrix, fromI + 1, 0, (1..n).toList())
+    n: Int, squareMatrix: SquareMatrix, fromI: Int, fromJ: Int, remainingRowChoices: List<Int>
+): Sequence<SquareMatrix> =
+    if (fromI == n) sequenceOf(squareMatrix)
+    else if (fromJ == n) latinMatricesFrom(n, squareMatrix, fromI + 1, 0, (1..n).toList())
     else remainingRowChoices.asSequence()
-        .filterNot { value -> (0 until fromI).any { matrix[it, fromJ] == value } }
+        .filterNot { value -> (0 until fromI).any { squareMatrix[it, fromJ] == value } }
         .flatMap { value ->
             latinMatricesFrom(
-                n, matrix.copyWithChange(fromI, fromJ, value),
+                n, squareMatrix.copyWithChange(fromI, fromJ, value),
                 fromI, fromJ + 1, remainingRowChoices.filter { it != value }
             )
         }
 
-fun Matrix.trace() =
+fun SquareMatrix.trace() =
     (0 until n).map { this[it, it] }.sum()
