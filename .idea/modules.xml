@@ -3,9 +3,14 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/qulification-round/esab-atad/esab-atad.iml" filepath="$PROJECT_DIR$/qulification-round/esab-atad/esab-atad.iml" />
+      <module fileurl="file://$PROJECT_DIR$/round-1b/expogo/expogo.iml" filepath="$PROJECT_DIR$/round-1b/expogo/expogo.iml" />
       <module fileurl="file://$PROJECT_DIR$/google-code-jam-2020.iml" filepath="$PROJECT_DIR$/google-code-jam-2020.iml" />
       <module fileurl="file://$PROJECT_DIR$/qulification-round/indicium/indicium.iml" filepath="$PROJECT_DIR$/qulification-round/indicium/indicium.iml" />
+      <module fileurl="file://$PROJECT_DIR$/round-1b/join-the-ranks/join-the-ranks.iml" filepath="$PROJECT_DIR$/round-1b/join-the-ranks/join-the-ranks.iml" />
       <module fileurl="file://$PROJECT_DIR$/qulification-round/nesting-depth/nesting-depth.iml" filepath="$PROJECT_DIR$/qulification-round/nesting-depth/nesting-depth.iml" />
+      <module fileurl="file://$PROJECT_DIR$/round-1c/overexcited-fan/overexcited-fan.iml" filepath="$PROJECT_DIR$/round-1c/overexcited-fan/overexcited-fan.iml" />
+      <module fileurl="file://$PROJECT_DIR$/round-1c/overrandomized/overrandomized.iml" filepath="$PROJECT_DIR$/round-1c/overrandomized/overrandomized.iml" />
+      <module fileurl="file://$PROJECT_DIR$/round-1c/oversized-pancake-chopper/oversized-pancake-chopper.iml" filepath="$PROJECT_DIR$/round-1c/oversized-pancake-chopper/oversized-pancake-chopper.iml" />
       <module fileurl="file://$PROJECT_DIR$/qulification-round/parenting-partnering-returns/parenting-partnering-returns.iml" filepath="$PROJECT_DIR$/qulification-round/parenting-partnering-returns/parenting-partnering-returns.iml" />
       <module fileurl="file://$PROJECT_DIR$/qulification-round/vestigium/vestigium.iml" filepath="$PROJECT_DIR$/qulification-round/vestigium/vestigium.iml" />
     </modules>
