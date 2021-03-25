@@ -27,5 +27,5 @@ fun testCase(ti: Int) {
     // ceil div
     val y = (emptyLrSum + 1) / 2
     val z = emptyLrSum / 2
-    println("Case #${ti + 1}:$y $z")
+    println("Case #${ti + 1}: $y $z")
 }
