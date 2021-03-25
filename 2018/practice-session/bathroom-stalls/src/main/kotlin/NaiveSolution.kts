@@ -24,8 +24,7 @@ fun testCase(ti: Int) {
     }
 
     val emptyLrSum = emptyPartitions.maxOf { it.second - it.first }
-    // ceil div
-    val y = (emptyLrSum + 1) / 2
+    val y = (emptyLrSum + 1) / 2 // ceil div
     val z = emptyLrSum / 2
     println("Case #${ti + 1}: $y $z")
 }
