@@ -19,7 +19,7 @@ fun testCase(ti: Int) {
         inverseSigmoid(results.asSequence().map { it[j] }.average()).coerceIn(-3.0, 3.0)
     }
 
-    // logarithms of player probability densities
+    // logarithms of player probabilities
     val lnPs = (ss zip results).asSequence().map { (s, rs) ->
         (rs.asSequence() zip qs.asSequence()).map { (r, q) ->
             val pCorrect = sigmoid(s - q)
