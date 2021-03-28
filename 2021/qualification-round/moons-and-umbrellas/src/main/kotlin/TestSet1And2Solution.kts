@@ -9,25 +9,15 @@ fun testCase(ti: Int) {
     val y = lineInputs[1].toInt()
     val s = lineInputs[2]
 
-    var lastExistingPattern = ' '
-    var minCost = 0
-    for (i in s.indices) {
-        val pattern = s[i]
-
-        // We could also first filter out all "?"s and then compute functionally, which would make this solution shorter.
-        if (pattern == '?') continue
-
-        if (pattern != lastExistingPattern && lastExistingPattern != ' ') {
-            when (pattern) {
-                // CJ
-                'J' -> minCost += x
-                // JC
-                'C' -> minCost += y
-                else -> throw IllegalArgumentException()
-            }
+    val minCost = s.asSequence().filterNot { it == '?' }.zipWithNext().map {
+        val window = it.toList().joinToString("")
+        when (window) {
+            "CJ" -> x
+            "JC" -> y
+            else -> if (window[0] == window[1]) 0
+            else throw IllegalArgumentException()
         }
-        lastExistingPattern = pattern
-    }
+    }.sum()
 
     println("Case #${ti + 1}: $minCost")
 }
