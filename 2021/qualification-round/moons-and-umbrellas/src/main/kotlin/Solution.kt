@@ -14,9 +14,25 @@ fun testCase(ti: Int) {
     val s = lineInputs[2]
 
     // dynamic programming
-    var minC = 0
-    var minJ = 0
-    for (pattern in s) {
+    var minC: Int
+    var minJ: Int
+    when (s.first()) {
+        '?' -> {
+            minC = 0
+            minJ = 0
+        }
+        'C' -> {
+            minC = 0
+            minJ = SAFE_POS_INF
+        }
+        'J' -> {
+            minC = SAFE_POS_INF
+            minJ = 0
+        }
+        else -> throw IllegalArgumentException()
+    }
+
+    for (pattern in s.drop(1)) {
         val oldMinC = minC
         val oldMinJ = minJ
         fun newMinC() = min(oldMinC, oldMinJ + y)
