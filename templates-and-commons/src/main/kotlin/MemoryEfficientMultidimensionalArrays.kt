@@ -20,7 +20,7 @@ class TwoD<T, C>(
         return size1 * i + j
     }
 
-    fun get(i: Int, j: Int): T = with(randomAccess) { backing[backingIndex(i, j)] }
+    operator fun get(i: Int, j: Int): T = with(randomAccess) { backing[backingIndex(i, j)] }
     operator fun set(i: Int, j: Int, value: T) = with(randomAccess) { backing[backingIndex(i, j)] = value }
 }
 
