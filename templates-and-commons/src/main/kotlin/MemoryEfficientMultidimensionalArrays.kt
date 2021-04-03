@@ -14,7 +14,12 @@ class TwoD<T, C>(
             }
     }
 
-    fun backingIndex(i: Int, j: Int) = size1 * i + j
+    fun backingIndex(i: Int, j: Int): Int {
+        require(i in 0 until size1)
+        require(j in 0 until size2)
+        return size1 * i + j
+    }
+
     fun get(i: Int, j: Int): T = with(randomAccess) { backing[backingIndex(i, j)] }
     operator fun set(i: Int, j: Int, value: T) = with(randomAccess) { backing[backingIndex(i, j)] = value }
 }
