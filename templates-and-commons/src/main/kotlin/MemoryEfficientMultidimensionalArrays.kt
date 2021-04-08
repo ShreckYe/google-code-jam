@@ -22,6 +22,23 @@ class TwoD<T, C>(
 
     operator fun get(i: Int, j: Int): T = with(randomAccess) { backing[backingIndex(i, j)] }
     operator fun set(i: Int, j: Int, value: T) = with(randomAccess) { backing[backingIndex(i, j)] = value }
+
+    fun newWithSameDimensAndBackingType(init: ((Int, Int) -> T)?): TwoD<T, C> =
+        TwoD(size1, size2, randomAccess, init)
+
+    inline fun <R, RC> mapToWithIndices(
+        randomAccess: RandomAccess<R, RC>, crossinline transform: (Int, Int, T) -> R
+    ): TwoD<R, RC> =
+        TwoD(size1, size2, randomAccess) { i, j -> transform(i, j, this[i, j]) }
+
+    inline fun <R, RC> mapTo(randomAccess: RandomAccess<R, RC>, crossinline transform: (T) -> R): TwoD<R, RC> =
+        TwoD(size1, size2, randomAccess) { i, j -> transform(this[i, j]) }
+
+    inline fun mapWithIndices(crossinline transform: (Int, Int, T) -> T): TwoD<T, C> =
+        mapToWithIndices(randomAccess, transform)
+
+    inline fun map(crossinline transform: (T) -> T): TwoD<T, C> =
+        mapTo(randomAccess, transform)
 }
 
 fun twoDIntArray(size1: Int, size2: Int, init: ((Int, Int) -> Int)? = null): TwoD<Int, IntArray> =
