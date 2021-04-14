@@ -5,6 +5,8 @@ fun main() {
 
 fun testCase(ti: Int) {
     TODO("read input")
+    //val _ = readLine()!!.toInt()
+    //val _ = readLine()!!.splitToSequence(' ').map { it.toInt() }.toList()
 
     TODO("compute")
 
