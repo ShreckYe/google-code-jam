@@ -32,7 +32,7 @@ fun testCase(ti: Int) {
             val ifCheatingPCorrect = 0.5 + 0.5 * sigmoid(s.second - q)
             val (p, ifCheatingP) = when (r) {
                 1 -> pCorrect to ifCheatingPCorrect
-                0 -> 1 - pCorrect to ifCheatingPCorrect
+                0 -> 1 - pCorrect to 1 - ifCheatingPCorrect
                 else -> throw IllegalArgumentException(r.toString())
             }
             ln(ifCheatingP / p)
