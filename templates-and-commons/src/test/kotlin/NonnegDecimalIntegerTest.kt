@@ -8,7 +8,7 @@ internal class NonnegDecimalIntegerTest {
     val defaultMaxLength = 100
     fun Random.randomNonnegDecimalInteger(maxLength: Int = defaultMaxLength): NonnegDecimalInteger =
         generateSequence { nextInt(0, 10).toByte() }
-            .take(maxLength).dropWhile { it == 0.toByte() }
+            .take(maxLength).toList().dropLastWhile { it == 0.toByte() }
             .toList()
 
     inline fun testEdgeCasesAndRandomNonnegDecimalIntegers(
@@ -32,13 +32,13 @@ internal class NonnegDecimalIntegerTest {
     @Test
     fun testConversions() =
         testEdgeCasesAndRandomNonnegDecimalIntegers {
-            val nlzString = it.toNLZString()
-            nlzString.getOrNull(0)?.let { assertNotEquals('0', it) }
-            assertEquals(it, nlzString.nLZToNonnegDecimalInteger())
+            val contentString = it.toContentString()
+            contentString.getOrNull(contentString.lastIndex)?.let { assertNotEquals('0', it) }
+            assertEquals(it, contentString.contentStringToNonnegDecimalInteger())
 
-            val stringOrZero = it.toStringOrZero()
-            assert(stringOrZero == "0" || stringOrZero[0] != '0')
-            assertEquals(it, stringOrZero.zeroOrNLZToNonnegDecimalInteger())
+            val numberString = it.toNumberString()
+            assert(numberString == "0" || numberString[0] != '0')
+            assertEquals(it, numberString.readableStringToNonnegDecimalInteger())
 
             try {
                 assertEquals(it, it.toInt().toNonnegDecimalInteger())
@@ -46,22 +46,17 @@ internal class NonnegDecimalIntegerTest {
             }
             try {
                 assertEquals(it, it.toLong().toNonnegDecimalInteger())
-            } catch (e: java.lang.NumberFormatException) {
+            } catch (e: NumberFormatException) {
             }
             assertEquals(it, it.toBigInteger().toNonnegDecimalInteger())
         }
 
     @Test
     fun testCompareToAndArithmetics() {
-        assert(zero compareTo zero == 0)
-        assert(zero < one)
-        assert(one > zero)
-        assert(one compareTo one == 0)
-
         testEdgeCasesAndRandomNonnegDecimalIntegers { a ->
             testEdgeCasesAndRandomNonnegDecimalIntegers { b ->
-                if (a == b) assertEquals(0, a compareTo b)
-                assertEquals(0, (a compareTo b) + (b compareTo a))
+                assertEquals((a.toBigInteger().compareTo(b.toBigInteger())), a compareTo b)
+                assertEquals((b.toBigInteger().compareTo(a.toBigInteger())), b compareTo a)
 
                 assertEquals(
                     (a.toBigInteger() + b.toBigInteger()).toNonnegDecimalInteger(),

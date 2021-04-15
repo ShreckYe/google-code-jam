@@ -19,15 +19,15 @@ val one = byteArrayOf(1).asList()
 
 // NLZ: no leading zero
 
-fun String.nLZToNonnegDecimalInteger() = map { (it - '0').toByte().also { require(it in 0..9) } }
-fun String.zeroOrNLZToNonnegDecimalInteger(): NonnegDecimalInteger {
+fun String.contentStringToNonnegDecimalInteger() = map { (it - '0').toByte().also { require(it in 0..9) } }
+fun String.readableStringToNonnegDecimalInteger(): NonnegDecimalInteger {
     require(isNotEmpty())
     return if (this == "0") zero
-    else nLZToNonnegDecimalInteger()
+    else reversed().contentStringToNonnegDecimalInteger()
 }
 
-fun NonnegDecimalInteger.toNLZString() = joinToString("")
-fun NonnegDecimalInteger.toStringOrZero() = if (isEmpty()) "0" else toNLZString()
+fun NonnegDecimalInteger.toContentString() = joinToString("")
+fun NonnegDecimalInteger.toNumberString() = if (isEmpty()) "0" else asReversed().joinToString("")
 
 
 infix operator fun NonnegDecimalInteger.compareTo(that: NonnegDecimalInteger): Int {
@@ -37,40 +37,40 @@ infix operator fun NonnegDecimalInteger.compareTo(that: NonnegDecimalInteger): I
     else compareToWithSameSize(that)
 }
 
-infix fun NonnegDecimalInteger.compareToWithSameSize(that: NonnegDecimalInteger): Int =
-    if (size == 0) 0
+infix fun NonnegDecimalInteger.compareToWithSameSize(that: NonnegDecimalInteger): Int {
+    val size = size
+    return if (size == 0) 0
     else {
-        val firstCompareResult = first().compareTo(that.first())
-        if (firstCompareResult != 0) firstCompareResult
-        else subList(1, size) compareToWithSameSize (that.subList(1, size))
+        // msd: most significant digit
+        val msdCompareResult = last().compareTo(that.last())
+        if (msdCompareResult != 0) msdCompareResult
+        else subList(0, size - 1) compareToWithSameSize (that.subList(0, size - 1))
     }
+}
 
 operator fun NonnegDecimalInteger.plus(that: NonnegDecimalInteger): NonnegDecimalInteger {
     // imperative implementation
-    val thisReversed = asReversed()
-    val thatReversed = that.asReversed()
     val maxSize = max(size, that.size)
     val capacity = maxSize + 1
     val sum = ByteArray(capacity)
-    val sumLastIndex = sum.lastIndex
     var carry = false
     for (i in 0 until maxSize) {
-        val digitSum = thisReversed.getOrElse(i) { 0 } + thatReversed.getOrElse(i) { 0 } + if (carry) 1 else 0
+        val digitSum = this.getOrElse(i) { 0 } + that.getOrElse(i) { 0 } + if (carry) 1 else 0
         if (digitSum < 10) {
-            sum[sumLastIndex - i] = digitSum.toByte()
+            sum[i] = digitSum.toByte()
             carry = false
         } else {
-            sum[sumLastIndex - i] = (digitSum - 10).toByte()
+            sum[i] = (digitSum - 10).toByte()
             carry = true
         }
     }
 
     @Suppress("LiftReturnOrAssignment")
     if (carry) {
-        sum[0] = 1
+        sum[maxSize] = 1
         return sum.asList()
     } else
-        return sum.asList().subList(1, capacity)
+        return sum.asList().subList(0, maxSize)
 }
 
 fun NonnegDecimalInteger.plusOne() =
@@ -78,20 +78,16 @@ fun NonnegDecimalInteger.plusOne() =
 
 operator fun NonnegDecimalInteger.minus(that: NonnegDecimalInteger): NonnegDecimalInteger {
     // imperative implementation
-    val thisReversed = asReversed()
-    val thatReversed = that.asReversed()
     val maxSize = max(size, that.size)
-    val capacity = maxSize
-    val diff = ByteArray(capacity)
-    val diffLastIndex = diff.lastIndex
+    val diff = ByteArray(maxSize)
     var carry = false
     for (i in 0 until maxSize) {
-        val digitDiff = thisReversed.getOrElse(i) { 0 } - thatReversed.getOrElse(i) { 0 } - if (carry) 1 else 0
+        val digitDiff = this.getOrElse(i) { 0 } - that.getOrElse(i) { 0 } - if (carry) 1 else 0
         if (digitDiff >= 0) {
-            diff[diffLastIndex - i] = digitDiff.toByte()
+            diff[i] = digitDiff.toByte()
             carry = false
         } else {
-            diff[diffLastIndex - i] = (digitDiff + 10).toByte()
+            diff[i] = (digitDiff + 10).toByte()
             carry = true
         }
     }
@@ -99,24 +95,24 @@ operator fun NonnegDecimalInteger.minus(that: NonnegDecimalInteger): NonnegDecim
     return if (carry)
         throw IllegalArgumentException("minus diff")
     else
-        diff.asSequence().dropWhile { it == 0.toByte() }.toList().toCompact()
+        diff.dropLastWhile { it == 0.toByte() }.toCompact()
 }
 
 
 fun NonnegDecimalInteger.toInt() =
-    toStringOrZero().toInt()
+    toNumberString().toInt()
 
 fun NonnegDecimalInteger.toLong() =
-    toStringOrZero().toLong()
+    toNumberString().toLong()
 
 fun NonnegDecimalInteger.toBigInteger() =
-    toStringOrZero().toBigInteger()
+    toNumberString().toBigInteger()
 
 fun Int.toNonnegDecimalInteger() =
-    toString().zeroOrNLZToNonnegDecimalInteger()
+    toString().readableStringToNonnegDecimalInteger()
 
 fun Long.toNonnegDecimalInteger() =
-    toString().zeroOrNLZToNonnegDecimalInteger()
+    toString().readableStringToNonnegDecimalInteger()
 
 fun BigInteger.toNonnegDecimalInteger() =
-    toString().zeroOrNLZToNonnegDecimalInteger()
+    toString().readableStringToNonnegDecimalInteger()
