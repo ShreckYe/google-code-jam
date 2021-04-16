@@ -12,12 +12,16 @@ fun NonnegDecimalInteger.toCompactArray(): CompactArrayNonnegDecimalInteger =
 fun NonnegDecimalInteger.toCompact(): NonnegDecimalInteger =
     toCompactArray().asList()
 
+fun NonnegDecimalInteger.lsd() = first()
+fun NonnegDecimalInteger.msd() = last()
+fun NonnegDecimalInteger.isZero() = isEmpty()
+
 
 val zero = byteArrayOf().asList()
 val one = byteArrayOf(1).asList()
 
+const val zeroByte: Byte = 0
 
-// NLZ: no leading zero
 
 fun String.contentStringToNonnegDecimalInteger() = map { (it - '0').toByte().also { require(it in 0..9) } }
 fun String.readableStringToNonnegDecimalInteger(): NonnegDecimalInteger {
@@ -95,7 +99,7 @@ operator fun NonnegDecimalInteger.minus(that: NonnegDecimalInteger): NonnegDecim
     return if (carry)
         throw IllegalArgumentException("minus diff")
     else
-        diff.dropLastWhile { it == 0.toByte() }.toCompact()
+        diff.dropLastWhile { it == zeroByte }.toCompact()
 }
 
 

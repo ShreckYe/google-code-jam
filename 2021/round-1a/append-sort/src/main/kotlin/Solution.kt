@@ -1,70 +1,41 @@
+import kotlin.math.max
+
 fun main() {
     val t = readLine()!!.toInt()
     repeat(t, ::testCase)
 }
 
-// with no leading 0s
-typealias DecimalNumber = List<Char>
-
-operator fun DecimalNumber.compareTo(that: DecimalNumber): Int {
-    val size = size
-    return when {
-        size != that.size -> size.compareTo(that.size)
-        size == 0 -> 0
+fun NonnegDecimalInteger.appendToLsdToBeGeSeq(that: NonnegDecimalInteger): Sequence<Byte> =
+    when {
+        isZero() -> that.asSequence()
+        that.isZero() -> asSequence()
         else -> {
-            val first = first()
-            val thatFirst = that.first()
+            val msd = msd()
+            val thatMsd = that.msd()
+
             when {
-                first < thatFirst -> -1
-                first > thatFirst -> 1
-                else -> subList(1, size).compareTo(that.subList(1, size))
+                msd > thatMsd -> generateSequence { zeroByte }.take(that.size - size) + asSequence()
+                msd < thatMsd -> generateSequence { zeroByte }.take(that.size - size + 1) + asSequence()
+                else -> subList(0, size - 1).appendToLsdToBeGeSeq(that.subList(0, that.size - 1)) + msd
             }
         }
     }
-}
 
-fun DecimalNumber.plusOneSeqAndCarry(): Pair<Sequence<Char>, Boolean> =
-    if (size == 0) "1".asSequence() to true
-    else {
-        val (tailPlusOne, carry) = subList(1, size).plusOneSeqAndCarry()
-        if (carry) {
-            val newFirst = first() + 1
-            if (newFirst <= '9') sequenceOf(newFirst) + List(size - 1) { '0' } to false
-            else "1".asSequence() + List(size) { '0' } to true
-        } else
-            sequenceOf(first()) + tailPlusOne to false
-    }
-
-fun DecimalNumber.plusOne(): DecimalNumber =
-    plusOneSeqAndCarry().first.toList()
-
-fun DecimalNumber.appendToBeGeSeq(that: DecimalNumber): Sequence<Char> =
-    if (that.isEmpty()) asSequence()
-    else {
-        val first = first()
-        val thatFirst = that.first()
-        when {
-            first > thatFirst -> asSequence() + List(that.size - size) { '0' }
-            first < thatFirst -> asSequence() + List(that.size - size + 1) { '0' }
-            else -> sequenceOf(first) + subList(1, size).appendToBeGeSeq(that.subList(1, size))
-        }
-    }
-
-fun DecimalNumber.appendToBeGe(that: DecimalNumber): DecimalNumber =
-    appendToBeGeSeq(that).toList()
+fun NonnegDecimalInteger.appendToLsdToBeGe(that: NonnegDecimalInteger): NonnegDecimalInteger =
+    appendToLsdToBeGeSeq(that).toList()
 
 
 fun testCase(ti: Int) {
     val n = readLine()!!.toInt()
-    val xs = readLine()!!.splitToSequence(' ').map { it.toList() }.toList()
+    val xs = readLine()!!.splitToSequence(' ').map { it.readableStringToNonnegDecimalInteger() }.toList()
 
-    var lastNumber = emptyList<Char>()
+    var lastNumber = zero
     var minNumSDA = 0
     for (x in xs) {
         if (x > lastNumber) {
             lastNumber = x
         } else {
-            val newNumber = x.appendToBeGe(lastNumber.plusOne())
+            val newNumber = x.appendToLsdToBeGe(lastNumber.plusOne())
             minNumSDA += newNumber.size - x.size
             lastNumber = newNumber
         }
@@ -72,3 +43,72 @@ fun testCase(ti: Int) {
 
     println("Case #${ti + 1}: $minNumSDA")
 }
+
+
+
+// no leading zeros
+typealias NonnegDecimalInteger = List<Byte>
+
+
+fun NonnegDecimalInteger.msd() = last()
+fun NonnegDecimalInteger.isZero() = isEmpty()
+
+
+val zero = byteArrayOf().asList()
+val one = byteArrayOf(1).asList()
+
+const val zeroByte: Byte = 0
+
+
+fun String.contentStringToNonnegDecimalInteger() = map { (it - '0').toByte().also { require(it in 0..9) } }
+fun String.readableStringToNonnegDecimalInteger(): NonnegDecimalInteger {
+    require(isNotEmpty())
+    return if (this == "0") zero
+    else reversed().contentStringToNonnegDecimalInteger()
+}
+
+infix operator fun NonnegDecimalInteger.compareTo(that: NonnegDecimalInteger): Int {
+    val size = size
+    val thatSize = that.size
+    return if (size != thatSize) size.compareTo(thatSize)
+    else compareToWithSameSize(that)
+}
+
+infix fun NonnegDecimalInteger.compareToWithSameSize(that: NonnegDecimalInteger): Int {
+    val size = size
+    return if (size == 0) 0
+    else {
+        // msd: most significant digit
+        val msdCompareResult = last().compareTo(that.last())
+        if (msdCompareResult != 0) msdCompareResult
+        else subList(0, size - 1) compareToWithSameSize (that.subList(0, size - 1))
+    }
+}
+
+operator fun NonnegDecimalInteger.plus(that: NonnegDecimalInteger): NonnegDecimalInteger {
+    // imperative implementation
+    val maxSize = max(size, that.size)
+    val capacity = maxSize + 1
+    val sum = ByteArray(capacity)
+    var carry = false
+    for (i in 0 until maxSize) {
+        val digitSum = this.getOrElse(i) { 0 } + that.getOrElse(i) { 0 } + if (carry) 1 else 0
+        if (digitSum < 10) {
+            sum[i] = digitSum.toByte()
+            carry = false
+        } else {
+            sum[i] = (digitSum - 10).toByte()
+            carry = true
+        }
+    }
+
+    @Suppress("LiftReturnOrAssignment")
+    if (carry) {
+        sum[maxSize] = 1
+        return sum.asList()
+    } else
+        return sum.asList().subList(0, maxSize)
+}
+
+fun NonnegDecimalInteger.plusOne() =
+    plus(one)
