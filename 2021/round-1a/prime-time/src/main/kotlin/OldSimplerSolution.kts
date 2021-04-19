@@ -53,7 +53,7 @@ data class Pn(val p: Int, val n: Long)
 
 fun List<Pn>.sum() = sumOf { it.p * it.n }
 fun Sequence<Pn>.sum() = sumOf { it.p * it.n }
-const val maxPrime = 499
+/*const*/ val maxPrime = 499
 
 fun decompose(number: Long, maxPrime: Int): List<Pn>? {
     require(number >= 1)
