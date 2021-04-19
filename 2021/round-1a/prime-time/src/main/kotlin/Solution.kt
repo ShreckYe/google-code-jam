@@ -1,6 +1,4 @@
-import kotlin.math.E
-import kotlin.math.exp
-import kotlin.math.pow
+import kotlin.math.*
 
 fun main() {
     val t = readLine()!!.toInt()
@@ -31,8 +29,8 @@ fun ans(pns: List<Pn>): Long {
     return (minProductGroupSum..maxProductGroupSum).asSequence()
         .map { upperBound - it }
         .firstOrNull { sumEqProduct ->
-            val factorPns = decompose(sumEqProduct, maxPrime)
-            if (factorPns !== null) {
+            val (factorPns, remaining) = factorizeWithFactors(sumEqProduct, primesToMaxPrime)
+            if (remaining == 1L) {
                 val sumGroupPnMap = pnMap.copyOf().also {
                     for ((p, n) in factorPns) {
                         val rn = it[p] - n
@@ -54,21 +52,62 @@ data class Pn(val p: Int, val n: Long)
 fun List<Pn>.sum() = sumOf { it.p * it.n }
 fun Sequence<Pn>.sum() = sumOf { it.p * it.n }
 const val maxPrime = 499
+val primesToMaxPrime = primesToWithSOE(maxPrime)
 
-fun decompose(number: Long, maxPrime: Int): List<Pn>? {
-    require(number >= 1)
-    val pns = ArrayList<Pn>(maxPrime)
-    var number = number
-    for (p in 2..maxPrime) {
-        if (number == 1L) break
-        var n = 0L
-        while (number % p == 0L) {
-            number /= p
-            n++
+
+
+// copied from NumberTheory.kt
+
+// see: https://en.wikipedia.org/wiki/Generation_of_primes#Complexity and https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes
+// see: https://en.wikipedia.org/wiki/Sieve_of_Eratosthenes#Pseudocode
+// O(n log(log(n)))
+fun primesToWithSOE(n: Int): List<Int> {
+    // BooleanArray is slightly faster than BitSet
+    val a = BooleanArray(n + 1) { true }
+    for (i in 2..sqrt(n.toDouble()).toInt())
+        if (a[i]) {
+            var j = i.squared()
+            while (j <= n) {
+                a[j] = false
+                j += i
+            }
         }
-        pns.add(Pn(p, n))
-    }
-    if (number == 1L) return pns
-
-    return null
+    return (2..n).filter { a[it] }
 }
+
+
+data class FactorAndNum(val factor: Int, val num: Int)
+data class FactorResult<R, N>(val result: R, val remaining: N)
+
+// O(log(factor, n)) = O(log(n))
+fun countFactors(n: Long, factor: Int): FactorResult<Int, Long> {
+    require(n > 0 && factor > 1)
+    return if (n % factor != 0L) FactorResult(0, n)
+    else {
+        val (nNum, remaining) = countFactors(n / factor, factor)
+        FactorResult(nNum + 1, remaining)
+    }
+}
+
+// O(max(primes.size, log(n)))
+fun factorizeWithFactors(n: Long, factors: List<Int>): FactorResult<List<FactorAndNum>, Long> {
+    @Suppress("NAME_SHADOWING")
+    var n = n
+    val pns = ArrayList<FactorAndNum>(factors.size)
+    for (p in factors) {
+        val (num, remainingN) = countFactors(n, p)
+        if (num > 0) {
+            pns.add(FactorAndNum(p, num))
+            n = remainingN
+        }
+    }
+    pns.trimToSize()
+    return FactorResult(pns, n)
+}
+
+
+
+// copied from MathExtensions.kt
+
+fun Int.squared(): Int =
+    this * this
