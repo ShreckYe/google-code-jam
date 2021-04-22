@@ -27,6 +27,9 @@ data class Fraction internal constructor(val numerator: BigInteger, val denomina
     operator fun div(that: Fraction) =
         this * that.inv()
 
+    operator fun compareTo(that: Fraction) =
+        (numerator * that.denominator).compareTo(that.numerator * denominator)
+
     override fun toString(): String =
         "$numerator/$denominator"
 
@@ -54,3 +57,6 @@ infix fun Long.divBy(that: Long) = toBigInteger() divBy that.toBigInteger()
 
 fun BigInteger.toFraction() =
     Fraction(this, BigInteger.ONE)
+
+fun Int.toFraction() = toBigInteger().toFraction()
+fun Long.toFraction() = toBigInteger().toFraction()
