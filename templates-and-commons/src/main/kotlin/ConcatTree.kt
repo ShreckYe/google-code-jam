@@ -56,3 +56,10 @@ fun <T> concatTreeOf(vararg elements: T) =
 
 operator fun <T> ConcatTree<T>.plus(that: ConcatTree<T>) =
     BranchNode(listOf(this, that))
+
+infix fun <T> ConcatTree<T>.plusEnsuringON(that: ConcatTree<T>) =
+    when {
+        this.none() -> that
+        that.none() -> this
+        else -> this + that
+    }
