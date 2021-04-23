@@ -1,4 +1,7 @@
-import kotlin.math.*
+import kotlin.math.E
+import kotlin.math.exp
+import kotlin.math.pow
+import kotlin.math.sqrt
 
 fun main() {
     val t = readLine()!!.toInt()
@@ -20,8 +23,9 @@ fun ans(pns: List<Pn>): Long {
     val upperBound = pns.sum()
     val minProductGroupSum = (0..upperBound)
         .first { exp(it.toDouble() / E) >= upperBound - it }
-    val maxProductGroupSum = (minProductGroupSum..upperBound)
-        .last { maxPrime.toDouble().pow(it.toDouble() / maxPrime) <= upperBound - it }
+    val maxProductGroupSum = (minProductGroupSum..upperBound).asSequence()
+        .takeWhile { maxPrime.toDouble().pow(it.toDouble() / maxPrime) <= upperBound - it }
+        .lastOrNull() ?: minProductGroupSum
 
     val pnMap = LongArray(maxPrime + 1)
     pns.forEach { pnMap[it.p] = it.n }
@@ -53,7 +57,6 @@ fun List<Pn>.sum() = sumOf { it.p * it.n }
 fun Sequence<Pn>.sum() = sumOf { it.p * it.n }
 const val maxPrime = 499
 val primesToMaxPrime = primesToWithSOE(maxPrime)
-
 
 
 // copied from NumberTheory.kt
@@ -104,7 +107,6 @@ fun factorizeWithFactors(n: Long, factors: List<Int>): FactorResult<List<FactorA
     pns.trimToSize()
     return FactorResult(pns, n)
 }
-
 
 
 // copied from MathExtensions.kt
