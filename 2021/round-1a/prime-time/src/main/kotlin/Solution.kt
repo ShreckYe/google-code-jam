@@ -102,6 +102,7 @@ fun factorizeWithFactors(n: Long, factors: List<Int>): FactorResult<List<FactorA
         if (num > 0) {
             pns.add(FactorAndNum(p, num))
             n = remainingN
+            if (n == 1L) break
         }
     }
     pns.trimToSize()
