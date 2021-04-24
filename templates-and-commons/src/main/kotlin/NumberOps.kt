@@ -53,7 +53,7 @@ interface MoreNumberOps<T> : NumberOps<T> {
     operator fun T.unaryMinus(): T =
         zero - this
 
-    fun T.inv(): T =
+    fun T.reciprocal(): T =
         one / this
 
     fun T.squared(): T =
@@ -64,6 +64,6 @@ interface MoreNumberOps<T> : NumberOps<T> {
             that == 0 -> one
             that > 0 -> powInt(that / 2).squared()
                 .let { if (that % 2 == 0) it else it * this }
-            else -> inv() powInt (-that)
+            else -> reciprocal() powInt (-that)
         }
 }

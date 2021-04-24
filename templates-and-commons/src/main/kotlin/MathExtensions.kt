@@ -10,7 +10,7 @@ infix fun Int.powInt(that: Int): Int =
         that == 0 -> 1
         that > 0 -> powInt(that / 2).squared()
             .let { if (that % 2 == 0) it else it * this }
-        else -> inv() powInt (-that)
+        else -> throw IllegalArgumentException("exponent less than 0")
     }
 
 infix fun Long.powInt(that: Int): Long =
@@ -18,5 +18,5 @@ infix fun Long.powInt(that: Int): Long =
         that == 0 -> 1L
         that > 0 -> powInt(that / 2).squared()
             .let { if (that % 2 == 0) it else it * this }
-        else -> inv() powInt (-that)
+        else -> throw IllegalArgumentException("exponent less than 0")
     }
