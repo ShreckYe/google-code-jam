@@ -14,8 +14,8 @@ class ConcatTreeTest {
 
         fun buildTree(depth: Int) = buildTreeAndGetEnd(depth, 0).first
 
-        assertEquals((0 until (2 powInt 4)).toList(), buildTree(4).toList())
+        assertEquals((0 until (1 shl 4)).toList(), buildTree(4).toList())
         // This test should run in O(n) which is about 1 million iterations. If it were O(n^2) it would be 10^12 which shouldn't finish.
-        assertEquals((0 until (2 powInt 20)).toList(), buildTree(20).toList())
+        assertEquals((0 until (1 shl 20)).toList(), buildTree(20).toList())
     }
 }
