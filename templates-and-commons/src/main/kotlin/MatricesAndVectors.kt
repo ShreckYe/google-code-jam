@@ -65,6 +65,27 @@ inline fun <Number> twoDMatrixOps(
             create(m, n, init)
     }
 
-interface MatrixAndVectorOps<Vector, Number> {
+interface VectorOps<Vector, Number> : RandomAccess<Number, Vector> {
+    val size: Int
+    // TODO
+}
+
+interface MatrixAndVectorOps<Matrix, Vector, Number> {
+    val matrixOps: MatrixOps<Matrix, Number>
+    val vectorOps: VectorOps<Vector, Number>
+    fun Vector.toMatrix(): Matrix = TODO()
+    fun Matrix.toVectorOrThrow(): Vector = TODO()
+    operator fun Matrix.times(vector: Vector): Vector =
+        with(matrixOps) { this@times * vector.toMatrix() }.toVectorOrThrow()
+    // TODO
+}
+
+interface SquareMatrixOps<Matrix, Number, PowNumber> {
+    fun Matrix.pow(that: PowNumber)
+    // TODO
+}
+
+interface SquareMatrixAndVectorOps<Matrix, Vector> {
+    fun solveLinearEquation(leftCoefficients: Matrix, rightCoefficients: Vector)
     // TODO
 }

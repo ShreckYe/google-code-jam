@@ -67,3 +67,8 @@ interface MoreNumberOps<T> : NumberOps<T> {
             else -> reciprocal() powInt (-that)
         }
 }
+
+// number ops that throw when overflow
+interface SafeNumberOps<T> : NumberOps<T>
+
+interface IntegralOps<T> : NumberOps<T>
