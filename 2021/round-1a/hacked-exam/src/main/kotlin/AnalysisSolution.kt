@@ -1,4 +1,3 @@
-import Fraction.Companion.one
 import java.math.BigInteger
 
 fun main() {
@@ -13,48 +12,16 @@ fun testCase(ti: Int) {
         lineInputs[0].map { it == 'T' } to lineInputs[1].toInt()
     }
 
-    val answers: List<Boolean>
-    val expectedScore: Fraction
-    when (n) {
-        1 -> {
-            val (a0, s0) = ass[0]
-            if (s0 divBy q >= half) {
-                answers = a0
-                expectedScore = s0.toFraction()
-            } else {
-                answers = a0.map { !it }
-                expectedScore = (q - s0).toFraction()
-            }
-        }
-        2 -> {
-            val (a0, s0) = ass[0]
-            val (a1, s1) = ass[1]
-            val (sameAs, differentAs) = (a0 zip a1).withIndex()
-                .partition { it.value.first == it.value.second }
-            val numStudent0CorrectInDifferentAs = (differentAs.size + s0 - s1) / 2
-            val numStudent0CorrectInSameAs = s0 - numStudent0CorrectInDifferentAs
+    val qTypeAndNums = (0 until q).map { qi ->
+        ass.asSequence()
+            .map { it.first[qi] } // get all students' answers to Question qi
+            .mapIndexed { si, a -> (if (a) 1 else 0) shl si }.reduce { a, b -> a or b } // convert to its type in Int
+    }.groupBy { it }
 
-            val trueProbabilities = Array<Fraction?>(q) { null }.also {
-                val numSameAs = sameAs.size
-                for ((i, a01) in sameAs) {
-                    val correctProbability = numStudent0CorrectInSameAs divBy numSameAs
-                    it[i] = if (a01.first) correctProbability else one - correctProbability
-                }
-                val numDifferentAs = differentAs.size
-                for ((i, a01) in differentAs) {
-                    val correctProbability = numStudent0CorrectInDifferentAs divBy numDifferentAs
-                    it[i] = if (a01.first) correctProbability else one - correctProbability
-                }
-            } as Array<Fraction>
+    val coefficients = ass.map { it.second }
 
-            val answerAneCorrectProbabilities =
-                trueProbabilities.map { if (it >= half) true to it else false to (one - it) }
-            answers = answerAneCorrectProbabilities.map { it.first }
-            expectedScore = answerAneCorrectProbabilities.asSequence().map { it.second }.reduce(Fraction::plus)
-        }
-        else -> throw IllegalArgumentException()
-    }
-
+    val answers = TODO() as List<Boolean>
+    val expectedScore = TODO()
     println("Case #${ti + 1}: ${answers.joinToString("") { if (it) "T" else "F" }} $expectedScore")
 }
 
@@ -82,12 +49,12 @@ data class Fraction internal constructor(val numerator: BigInteger, val denomina
     operator fun times(that: Fraction) =
         reducedFraction(numerator * that.numerator, denominator * that.denominator)
 
-    fun inv() =
+    fun reciprocal() =
         if (numerator > BigInteger.ZERO) Fraction(denominator, numerator)
         else Fraction(-denominator, -numerator)
 
     operator fun div(that: Fraction) =
-        this * that.inv()
+        this * that.reciprocal()
 
     operator fun compareTo(that: Fraction) =
         (numerator * that.denominator).compareTo(that.numerator * denominator)
