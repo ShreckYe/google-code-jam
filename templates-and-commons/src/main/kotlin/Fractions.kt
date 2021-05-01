@@ -20,12 +20,12 @@ data class Fraction internal constructor(val numerator: BigInteger, val denomina
     operator fun times(that: Fraction) =
         reducedFraction(numerator * that.numerator, denominator * that.denominator)
 
-    fun inv() =
+    fun reciprocal() =
         if (numerator > BigInteger.ZERO) Fraction(denominator, numerator)
         else Fraction(-denominator, -numerator)
 
     operator fun div(that: Fraction) =
-        this * that.inv()
+        this * that.reciprocal()
 
     operator fun compareTo(that: Fraction) =
         (numerator * that.denominator).compareTo(that.numerator * denominator)
@@ -36,6 +36,10 @@ data class Fraction internal constructor(val numerator: BigInteger, val denomina
     fun toSimplestString(): String =
         if (denominator == BigInteger.ONE) numerator.toString()
         else toString()
+
+    fun toIntegerOrNull(): BigInteger? =
+        if (denominator == BigInteger.ONE) numerator
+        else null
 
     companion object {
         val zero = Fraction(BigInteger.ZERO, BigInteger.ONE)
