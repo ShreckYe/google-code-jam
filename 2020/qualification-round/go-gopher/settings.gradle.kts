@@ -1,3 +1,0 @@
-
-rootProject.name = "go-gopher"
-
