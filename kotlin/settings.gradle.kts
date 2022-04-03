@@ -17,7 +17,6 @@ val roundTrees = listOf(
         "2022", listOf(
             RoundTree.Branch(
                 "qualification-round", listOf(
-                    RoundTree.Leaf("test"),
                     RoundTree.Leaf("punched-cards"),
                     RoundTree.Leaf("3d-printing"),
                     RoundTree.Leaf("d1000000"),
