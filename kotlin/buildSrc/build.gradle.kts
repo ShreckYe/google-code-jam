@@ -1,6 +1,5 @@
 plugins {
     `kotlin-dsl`
-    kotlin("jvm") version "1.6.10" // TODO
 }
 
 repositories {
@@ -8,5 +7,5 @@ repositories {
 }
 
 dependencies {
-    implementation(kotlin("gradle-plugin"))
+    implementation(kotlin("gradle-plugin", "1.6.10"))
 }

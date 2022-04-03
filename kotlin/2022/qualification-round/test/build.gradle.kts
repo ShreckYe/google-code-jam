@@ -1,4 +1,7 @@
 plugins {
     id("conventions")
-    //kotlin("jvm") version "1.6.10" // TODO
+}
+
+dependencies {
+    implementation(kotlin("stdlib", "1.3.0"))
 }
