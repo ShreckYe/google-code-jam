@@ -28,7 +28,7 @@ fun testCase(ti: Int) {
 
 data class SelectedIn(val inV: Int?, val maxFun: Int, val sumMaxFun: Long)
 
-// We are searching a forest instead of a DAG.
+// We are searching a reversed forest instead of a DAG.
 fun dfsMaxSumMaxFun(inss: List<List<Int>>, fs: List<Int>, v: Int): SelectedIn {
     val f = fs[v]
     val ins = inss[v]
