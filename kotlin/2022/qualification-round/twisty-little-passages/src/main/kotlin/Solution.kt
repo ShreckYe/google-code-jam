@@ -1,22 +1,35 @@
+import kotlin.math.roundToLong
+
+// very naive solution
+
 fun main() {
     val t = readLine()!!.toInt()
     repeat(t, ::testCase)
 }
 
 fun testCase(ti: Int) {
-    TODO("read input")
-    //val _ = readLine()!!.toInt()/.toLong()
     val (n, k) = readLine()!!.splitToSequence(' ').map { it.toInt() }.toList()
-    repeat(k) {
+
+    val numsPassages = Array<Int?>(n) { null }
+    fun readAndSavenumPassages() {
         val (r, p) = readLine()!!.splitToSequence(' ').map { it.toInt() }.toList()
-
-        println("W")
-        println("T 1")
+        numsPassages[r - 1] = p
     }
-    println("E 123")
 
-    TODO("compute")
+    var nextRoom = 0
+    repeat(k) {
+        readAndSavenumPassages()
 
-    val y = TODO()
-    println("Case #${ti + 1}: $y")
+        //println("W")
+        while (numsPassages[nextRoom] !== null)
+            nextRoom++
+
+        println("T ${nextRoom + 1}")
+    }
+    readAndSavenumPassages()
+
+    val seen = numsPassages.filterNotNull()
+
+    val y = ((seen.asSequence().map { it.toLong() }.sum() * n).toDouble() / seen.size / 2).roundToLong()
+    println("E $y")
 }
