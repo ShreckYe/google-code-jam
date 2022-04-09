@@ -9,7 +9,7 @@ fun bitSubsets2(size: Int): Sequence<Int> {
 }
 
 fun <T> List<T>.allSubsets(): Sequence<List<T>> =
-    bitSubsets(size).map { s -> filterIndexed { i, _ -> (s and 1 shl i) != 0 } }
+    bitSubsets(size).map { s -> filterIndexed { i, _ -> (s and (1 shl i)) != 0 } }
 
 fun <T> List<T>.all2Partitions(): Sequence<Pair<List<T>, List<T>>> =
     bitSubsets(size).map { s ->

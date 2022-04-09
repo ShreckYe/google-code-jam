@@ -125,6 +125,13 @@ val roundTrees = listOf(
                     RoundTree.Leaf("twisty-little-passages"),
                 ),
             ),
+            RoundTree.Branch(
+                "round-1a", listOf(
+                    RoundTree.Leaf("double-or-one-thing"),
+                    RoundTree.Leaf("equal-sum"),
+                    RoundTree.Leaf("weightlifting"),
+                ),
+            ),
         ),
     ),
 )
