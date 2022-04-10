@@ -63,7 +63,7 @@ fun canPick(bbsFirstSubsetSum: Long, expectedSum: Long, n: Int): Boolean {
 }
 
 fun pickAAs(diff: Int, n: Int): List<Long> {
-    require(n <= 30)
+    require(n <= 29)
     val list = ArrayList<Long>(n + 1)
     for (i in 0..n) {
         val twoPowI = 1 shl i
