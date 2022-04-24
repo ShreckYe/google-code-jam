@@ -1,3 +1,5 @@
+package oldsolutionnottakingintoaccountnneq100
+
 import kotlin.system.exitProcess
 
 fun main() {
@@ -22,14 +24,21 @@ fun testCase() {
 }
 
 fun solve(nn: Int, bbs: List<Long>, expectedSum: Long): List<Long> =
-    greedyAndPick(bbs, expectedSum, nn)!!
+    /*
+    println("fs: " + firstSubset)
+    println("fss: " + firstSubsetSum)
+    println("es: " + expectedSum)
+    */
+    greedy(bbs, expectedSum, nn)
+        ?: if (nn <= 28) bruteForce(bbs, expectedSum, nn)
+        else throw IllegalStateException("oldsolutionnottakingintoaccountnneq100.greedy doesn't work when nn=$nn")
 
 fun generateAas(nn: Int) =
     List(nn) { (1 shl it.coerceAtMost(29)).toLong() }
 
-fun greedyPartitionMinDiff(bbs: List<Long>): Pair<Long, List<Long>> {
+fun greedy(bbs: List<Long>, expectedSum: Long, nn: Int): List<Long>? {
     val sbbs = bbs.sortedDescending()
-    val firstSubset = ArrayList<Long>(bbs.size * 2)
+    val firstSubset = ArrayList<Long>(nn * 2)
     var firstSubsetSum = 0L
     var secondSubsetSum = 0L
     for (b in sbbs)
@@ -39,20 +48,11 @@ fun greedyPartitionMinDiff(bbs: List<Long>): Pair<Long, List<Long>> {
         } else
             secondSubsetSum += b
 
-    return firstSubsetSum to firstSubset
-}
-
-fun greedyAndPick(bbs: List<Long>, expectedSum: Long, nn: Int): List<Long>? {
-    val (firstSubsetSum, firstSubset) = greedyPartitionMinDiff(bbs)
-
     val n = nn.coerceAtMost(29)
     return if (canPick(firstSubsetSum, expectedSum, n))
-        firstSubset + pickAAs((expectedSum - firstSubsetSum).toIntExact(), n)
+        firstSubset + pickAAs((expectedSum - firstSubsetSum).toInt(), n)
     else null
 }
-
-fun Long.toIntExact() =
-    Math.toIntExact(this)
 
 fun maxSum(n: Int): Int {
     require(n <= 29)
@@ -74,3 +74,21 @@ fun pickAAs(diff: Int, n: Int): List<Long> {
     }
     return list
 }
+
+fun bruteForce(bbs: List<Long>, expectedSum: Long, n: Int) =
+    bbs.allSubsets().firstNotNullOf {
+        val bbsFirstSubsetSum = it.sum()
+        if (canPick(bbsFirstSubsetSum, expectedSum, n))
+            it + pickAAs((expectedSum - bbsFirstSubsetSum).toInt(), n)
+        else
+            null
+    }
+
+
+fun bitSubsets(size: Int): Sequence<Int> {
+    require(size <= 30)
+    return (0 until (1 shl size)).asSequence()
+}
+
+fun <T> List<T>.allSubsets(): Sequence<List<T>> =
+    bitSubsets(size).map { s -> filterIndexed { i, _ -> (s and (1 shl i)) != 0 } }

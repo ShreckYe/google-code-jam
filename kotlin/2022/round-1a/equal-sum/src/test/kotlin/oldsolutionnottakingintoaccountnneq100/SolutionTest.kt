@@ -1,3 +1,5 @@
+package oldsolutionnottakingintoaccountnneq100
+
 import kotlin.random.Random
 import kotlin.test.Test
 import kotlin.test.assertFalse
