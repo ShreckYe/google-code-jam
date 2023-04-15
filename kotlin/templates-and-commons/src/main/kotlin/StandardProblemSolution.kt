@@ -1,9 +1,9 @@
 fun main() {
-    val t = readLine()!!.toInt()
-    repeat(t, ::testCase)
+    val tt = readLine()!!.toInt()
+    repeat(tt, ::testCase)
 }
 
-fun testCase(ti: Int) {
+fun testCase(tti: Int) {
     TODO("read input")
     //val _ = readLine()!!.toInt()/.toLong()
     //val _ = readLine()!!.splitToSequence(' ').map { it.toInt()/.toLong() }.toList()
@@ -11,5 +11,5 @@ fun testCase(ti: Int) {
     TODO("compute")
 
     val y = TODO()
-    println("Case #${ti + 1}: $y")
+    println("Case #${tti + 1}: $y")
 }
